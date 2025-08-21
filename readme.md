@@ -40,7 +40,7 @@ infinite-agent-streams/
 
 ## 🔑 Recipes
 
-### **R1: A2A + Agents SDK (Baseline)**
+### **[R1: A2A + Agents SDK (Zero Cost Baseline Stack)](./r1-a2a-agents/README.md)**
 
 * Pure A2A with Agents SDK.
 * Stateless interactions over HTTP transport.
@@ -56,6 +56,30 @@ sequenceDiagram
   Agent->>A2A: Response
   A2A->>FE: Stream back SSE
 ```
+
+This recipe runs everything in **one container + one FastAPI server** — keeping things **simple and cost-free**.
+Perfect if you **don’t know Kubernetes yet** or want to deploy on **serverless containers** (Fly.io, Railway, Render, etc.).
+
+```
++--------------------------------------+
+|         🚀 Single Container           |
+|                                      |
+|  +-----------+   +-------------+     |
+|  |   A2A     |   |     BFF     |     |
+|  |  Server   |<->|   (API)     |     |
+|  +-----------+   +-------------+     |
+|          \             |             |
+|           \            |             |
+|            \           v             |
+|          +------------------+        |
+|          |   AI Agent(s)    |        |
+|          |  (OpenAI, etc.)  |        |
+|          +------------------+        |
+|                                      |
++--------------------------------------+
+```
+
+⚡ No extra infra required. 👉 See [r1-a2a-agents/README.md](./r1-a2a-agents/README.md) for full setup instructions.
 
 ---
 
