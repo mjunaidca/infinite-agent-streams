@@ -27,7 +27,7 @@ Each recipe is fully self-contained with code, setup steps, and docs:
 infinite-agent-streams/
 │
 ├── r1-a2a-agents/
-├── r2-a2a-agents-dapr-pubsub/
+├── r2-a2a-dapr-eda-agents/
 ├── r3-a2a-dapr-actors/
 ├── r4-a2a-ray-actors/
 │
@@ -79,14 +79,28 @@ Perfect if you **don’t know Kubernetes yet** or want to deploy on **serverless
 +--------------------------------------+
 ```
 
-⚡ No extra infra required. 👉 See [r1-a2a-agents/README.md](./r1-a2a-agents/README.md) for full setup instructions.
+⚡ No extra infra required. You know just Python and any Agentic Engine.
+👉 See [r1-a2a-agents/README.md](./r1-a2a-agents/README.md) for full setup instructions.
 
 ---
 
-### **R2: A2A + Agents SDK + Dapr PubSub**
+### **[R2: A2A + Agents SDK + Dapr PubSub](./r2-a2a-dapr-eda-agents/README.md)**
+
+Now our agents will move from point to point to EDA we will separate A2A+BFF from the Agent to allow independent scaling and sidecar-powered resilience.
 
 * Adds **Dapr PubSub** (e.g., Redis) for scalable async streaming.
 * Decouples A2A from agent runtime.
+
+- **Setup:** 
+  - Container 1: A2A Server + BFF (with Dapr sidecar)
+  - Container 2: Agent (with Dapr sidecar)
+
+- **Infra:** Still container-based (Docker), but more production-friendly.
+
+- **Highlights:**
+  - PubSub and service discovery via Dapr
+  - Agents can scale independently
+  - Same local dev story as Recipe 1, but closer to Kubernetes-native
 
 ```mermaid
 flowchart LR
@@ -96,6 +110,8 @@ flowchart LR
   Agent --> PubSub
   PubSub --> A2A --> FE
 ```
+
+👉 See [r2-a2a-dapr-eda-agents/README.md](./r2-a2a-dapr-eda-agents/README.md) for details.
 
 ---
 
