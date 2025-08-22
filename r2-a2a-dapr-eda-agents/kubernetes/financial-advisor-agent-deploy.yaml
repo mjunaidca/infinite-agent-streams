@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: financial-advisor-agent
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: financial-advisor-agent
+  template:
+    metadata:
+      labels:
+        app: financial-advisor-agent
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "financial-advisor-agent"
+        dapr.io/app-port: "8002"
+        dapr.io/log-level: "info"
+        # dapr.io/app-protocol: "grpc"
+    spec:
+      containers:
+      - name: app
+        image: financial-advisor-agent # CORRECTED: Match the Tiltfile ref
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: financial-advisor-agent-service
+  namespace: default
+  labels:
+    app: financial-advisor-agent
+spec: 
+  selector:
+    app: financial-advisor-agent
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8002
+      appProtocol: http
+  type: ClusterIP

@@ -1,0 +1,49 @@
+load('ext://helm_remote', 'helm_remote') # helm extension -> Dapr Helm Chart
+load('ext://nerdctl', 'nerdctl_build') # nerdctl extension -> Docker Build
+
+update_settings(k8s_upsert_timeout_secs=900) # Increase apply timeout for Helm deployments
+
+# 1. Build the FastAPI image using nerdctl
+nerdctl_build(
+    ref='a2a-bff',
+    context='./a2a-bff',
+    dockerfile='./a2a-bff/Dockerfile',
+    live_update=[
+        sync('./a2a-bff', '/code'),
+    ]
+)
+
+nerdctl_build(
+    ref='financial-advisor-agent',
+    context='./financial-advisor-agent',
+    dockerfile='./financial-advisor-agent/Dockerfile',
+    live_update=[
+        sync('./financial-advisor-agent', '/code'),
+    ]
+)
+
+helm_remote(
+    chart='dapr',
+    repo_url='https://dapr.github.io/helm-charts/',
+    repo_name='dapr',
+    version='1.15',
+    release_name='dapr',
+    namespace='dapr-system',
+    create_namespace=True,
+    set=['global.mtls.enabled=false', 'global.ha.enabled=false']
+)
+
+k8s_yaml(['./components/pubsub.yaml'])
+
+# # Above Dapr setup is Completed
+k8s_yaml(['kubernetes/a2a-bff-deploy.yaml', 'kubernetes/financial-advisor-agent-deploy.yaml'])
+
+k8s_resource(
+    'a2a-bff',
+    port_forwards='8001:8001',
+)
+
+k8s_resource(
+    'financial-advisor-agent',
+    port_forwards='8002:8002',
+)

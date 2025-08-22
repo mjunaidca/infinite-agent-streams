@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a2a-bff
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: a2a-bff
+  template:
+    metadata:
+      labels:
+        app: a2a-bff
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "a2a-bff"
+        dapr.io/app-port: "8001"
+        dapr.io/log-level: "info"
+    spec:
+      containers:
+      - name: app
+        image: a2a-bff # CORRECTED: Match the Tiltfile ref
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a2a-bff-service
+  namespace: default
+  labels:
+    app: a2a-bff
+spec: 
+  selector:
+    app: a2a-bff
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001
+      appProtocol: http
+  type: ClusterIP

@@ -30,6 +30,11 @@ Pub/Sub <------ Redis/Kafka ------> Pub/Sub
 
 ```
 
+## A2A + BFF 
+- For PubSub we will use light weight redis streams with a managed service like upstash.
+- 
+
+
 **Flow:**  
 1. Frontend calls BFF → A2A.  
 2. A2A publishes messages into Dapr PubSub.  
@@ -44,10 +49,12 @@ Pub/Sub <------ Redis/Kafka ------> Pub/Sub
   - A2A protocol server  
   - BFF (API bridge)  
   - Dapr sidecar  
+  - Packages and Manager: `uv init a2a-bff` -> `uv add "a2a-sdk[http-server]" dapr`
 
 - **Container 2:**  
   - Agent runtime (AgentExecutor from OpenAI Agents SDK)  
   - Dapr sidecar  
+  - Packages and Manager: `uv init financial-advisor-agent` -> `uv add openai-agents`
 
 ---
 
