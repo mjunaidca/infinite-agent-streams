@@ -134,22 +134,16 @@ flowchart LR
 
 ---
 
-### **R4: A2A + Ray Actors (Scalable Compute)**
+### **R4: A2A + Ray Actors (Scalable Compute)** [Dropped]
+
+>>After going through Ray Docs for now decided to drop this recipe. Instead will take the work done in first 3 and get it production ready for multi users and multi tenants and multi agent tasks for each user.
 
 * Integrates **Ray Actors** for heavy compute / distributed workloads.
 * A2A orchestrates Ray Actors just like Dapr ones.
 * Use case: LLM pipelines, simulations, ML model serving.
 
-```mermaid
-flowchart LR
-  FE[Frontend] --> A2A
-  A2A --> RayCluster[(Ray Cluster)]
-  RayCluster --> RayActor1[Ray Actor Worker]
-  RayCluster --> RayActor2[Ray Actor Worker]
-  RayActor1 --> RayCluster
-  RayActor2 --> RayCluster
-  RayCluster --> A2A --> FE
-```
+### **R4: A2A + Dapr Actors (Multi Tasks, Multi Users)**
+
 
 ---
 
