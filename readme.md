@@ -92,7 +92,7 @@ Now our agents will move from point to point to EDA we will separate A2A+BFF fro
 * Decouples A2A from agent runtime.
 
 - **Setup:** 
-  - Container 1: A2A Server + BFF (with Dapr sidecar)
+  - Container 1: A2A Server (with Dapr sidecar)
   - Container 2: Agent (with Dapr sidecar)
 
 - **Infra:** Still container-based (Docker), but more production-friendly.
