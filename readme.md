@@ -142,8 +142,45 @@ flowchart LR
 * A2A orchestrates Ray Actors just like Dapr ones.
 * Use case: LLM pipelines, simulations, ML model serving.
 
-### **R4: A2A + Dapr Actors (Multi Tasks, Multi Users)**
+### **R4 (Rebooted): A2A + Dapr Actors for Multi-User / Multi-Agent Tasks**
 
+* **Frontend**: SSE / WebSocket inspector + user UI.
+* **A2A Layer**: Orchestrates requests, routes to correct agent actor.
+* **Dapr Actors**: Each agent represents a virtual actor:
+
+  * Holds **state** (memory, session, tools, goals)
+  * Handles **multiple tasks** concurrently (using async patterns / reminders)
+  * Scales **horizontally per user / tenant**
+* **PubSub Layer**: Dapr handles async communication for streaming events, job queues, and inter-agent collaboration.
+* **Data Layer**: Vector DB / Redis / SQL for agent memory, embeddings, and cross-agent data.
+
+```mermaid
+flowchart LR
+  FE[Frontend UI] --> A2A[A2A Layer]
+  A2A --> PubSub[(Dapr PubSub)]
+  PubSub --> Actor1[Dapr Virtual Actor A]
+  PubSub --> Actor2[Dapr Virtual Actor B]
+  Actor1 --> PubSub
+  Actor2 --> PubSub
+  PubSub --> A2A --> FE
+  Actor1 --> DB[(Vector DB / Redis)]
+  Actor2 --> DB
+```
+
+---
+
+1. **Streaming-first**: SSE / WebSocket support integrated with PubSub → partial results can be pushed to frontend.
+2. **Multi-tasking**: Each actor supports multiple async jobs concurrently using Python `asyncio` + Dapr reminders for background tasks.
+3. **Multi-user / multi-tenant**:
+   * Actors scoped by `user_id` and `tenant_id`
+   * Enables isolated memory, limits, and policies per user
+   * **Actor Naming**: `"agent-{tenant_id}-{user_id}-{agent_id}"`
+4. **State & Memory**:
+   * Keep persistent state in actor + external DB for heavy/large memory
+   * Handles retries and idempotency for robust production behavior
+5. **Inter-agent collaboration**:
+   * PubSub channels allow agents to communicate / delegate subtasks
+   * Supports future extensions like A2A or MCP patterns
 
 ---
 
