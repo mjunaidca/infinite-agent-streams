@@ -1,0 +1,18 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: daca-pubsub
+  namespace: default
+spec:
+  type: pubsub.redis
+  version: v1
+  metadata:
+    - name: redisHost
+      value: master-mayfly-35959.upstash.io:6379
+    - name: redisPassword
+      value: AYx3AAIncDEwZTBmZmQ0MWMyN2U0ZTBlOWM5NzVlZjQxMDNiNjk4ZnAxMzU5NTk
+    - name: enableTLS
+      value: "true"  # Enables secure connection (uses rediss:// protocol)
+# https://docs.dapr.io/operations/components/setup-pubsub/
+# https://docs.dapr.io/developing-applications/building-blocks/pubsub/howto-publish-subscribe/
+# https://docs.dapr.io/developing-applications/building-blocks/pubsub/subscription-methods/
